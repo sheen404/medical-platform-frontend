@@ -15,9 +15,6 @@ import {
   IconButton,
   Card,
   CardContent,
-  Dialog,
-  DialogTitle,
-  DialogContent,
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -27,8 +24,6 @@ import { patientTheme } from "../Themes";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { Patient } from "../types/PatientDataType";
-import { useState } from "react";
 
 export default function PatientDashboardScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
@@ -36,17 +31,6 @@ export default function PatientDashboardScreen(props: any) {
   const handleAppointments = () => {
     navigate(`/patient/appointments`);
   };
-  const handleDetailButtonClick = () => {
-    // setSelectedPatient(patient);
-    setShowDetailDialog(true);
-  };
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const handleClose = () => {
-    // setShowAssessmentDialog(false);
-    setShowDetailDialog(false);
-  };
-
 
   return (
     <ThemeProvider theme={patientTheme}>
@@ -96,7 +80,6 @@ export default function PatientDashboardScreen(props: any) {
                       <Stack direction={"row"}>
                         <Button
                           variant="contained"
-                          onClick={() => handleDetailButtonClick()}
                           sx={{
                             marginRight: 2,
                             backgroundColor: "primary.dark",
@@ -104,7 +87,7 @@ export default function PatientDashboardScreen(props: any) {
                             ":hover": { backgroundColor: "primary.main" },
                           }}
                         >
-                          Detials
+                          Accept
                         </Button>
                         <Button
                           variant="contained"
@@ -125,41 +108,6 @@ export default function PatientDashboardScreen(props: any) {
             </ListItem>
           </List>
         </Stack>
-
-        <Dialog open={showDetailDialog} onClose={handleClose}>
-          <DialogTitle sx={{ fontWeight: "bold" }}>
-            Patient Name: Alex
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1">
-              Patient ID: {selectedPatient?.id}
-            </Typography>
-            {/* <Typography variant="subtitle1">
-              Patient Name: {selectedPatient?.name}
-            </Typography> */}
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assessment Test
-            </Typography>
-            <Typography variant="subtitle1">
-              Status: {selectedPatient?.address}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assignment Comment
-            </Typography>
-            <Typography variant="subtitle1">
-              Comment: {selectedPatient?.dob}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Appointment Comment
-            </Typography>
-            <Typography variant="subtitle1">
-              Comment: {selectedPatient?.phone}
-            </Typography>
-            <Typography variant="subtitle1">
-              Notes: {selectedPatient?.email}
-            </Typography>
-          </DialogContent>
-        </Dialog>
       </Stack>
     </ThemeProvider>
   );

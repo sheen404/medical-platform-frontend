@@ -29,7 +29,6 @@ import { useNavigate } from "react-router-dom";
 import { fetchPatients, selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
 import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
-import { roleToPosition } from "../constants/PositionRoleMap";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
@@ -39,9 +38,6 @@ export default function DoctorDashboardScreen(props: any) {
   const [open, setOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [reason, setReason] = useState("");
-
-  const role = userInfo?.userData.role;
-  const position = roleToPosition.get(role ? role : "");
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
     setOpen(true);
@@ -59,13 +55,12 @@ export default function DoctorDashboardScreen(props: any) {
     navigate(`/doctor/appointments`);
   };
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
-      dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+    dispatch(updatePatientStatus(patient.email, "", ""));
   };
 
   const handleReject = () => {
     if (selectedPatient)
-      dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
+      dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason));
     setReason("");
     setOpen(false);
 
@@ -74,7 +69,7 @@ export default function DoctorDashboardScreen(props: any) {
 
   useEffect(() => {
     if (userInfo)
-      dispatch(fetchPatients(userInfo.userData.email, userInfo.token, position));
+      dispatch(fetchPatients(userInfo.userData.email));
   }, []);
 
   return (
@@ -94,12 +89,12 @@ export default function DoctorDashboardScreen(props: any) {
 
         <Stack>
           <Typography variant="h5">Recent Appointments</Typography>
-          <List sx={{ flexGrow: 1 }}>
-            {patients.map(
-              patient => (
-                <ListItem  key={patient.id}>
-                  <Box width={"100%"}>
-                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+          <List>
+            <ListItem>
+              <Box width={"100%"}>
+                {patients.map(
+                  patient => (
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }} key={patient.id}>
                       <CardContent>
                         <Stack direction={"row"} justifyContent={"space-between"}>
                           <Stack direction={"row"}>
@@ -128,36 +123,37 @@ export default function DoctorDashboardScreen(props: any) {
                         </Stack>
                       </CardContent>
                     </Card>
-                  </Box>
-                </ListItem>
-              )
-            )}
+                  )
+                )}
 
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Reject Patient {selectedPatient?.name}</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Please provide a reason for rejecting this patient.
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Reason"
-                  type="text"
-                  fullWidth
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleReject} color="error">
-                  Reject
-                </Button>
-              </DialogActions>
-            </Dialog>
+
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Reject Patient {selectedPatient?.name}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Please provide a reason for rejecting this patient.
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      label="Reason"
+                      type="text"
+                      fullWidth
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleReject} color="error">
+                      Reject
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </Box>
+            </ListItem>
           </List>
         </Stack>
       </Stack>

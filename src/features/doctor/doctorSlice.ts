@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from "../../app/store";
 import axios from "axios";
 import { Patient } from "../../types/PatientDataType";
 
 const TestPatient: Patient[] = [{
   address: "Test",
-  assessmentOptionsSelected: ["a", "b", "c", "d", "b", "c", "a", "b", "c"],
+  assessmentOptionsSelected:  ["a", "b", "c", "d", "b", "c", "a", "b", "c"],
   assessmentTaken: false,
   counsellingComment: "",
   counsellingDone: false,
@@ -30,7 +30,7 @@ const TestPatient: Patient[] = [{
 },
   {
     address: "Addr2",
-    assessmentOptionsSelected: [],
+    assessmentOptionsSelected:  [],
     assessmentTaken: false,
     counsellingComment: "",
     counsellingDone: false,
@@ -53,7 +53,7 @@ const TestPatient: Patient[] = [{
     status: "",
     verificationAttempts: null
 
-  }];
+  }]
 
 interface DoctorState {
   updatingPatientStatus: boolean;
@@ -66,15 +66,14 @@ interface DoctorState {
 const initialState: DoctorState = {
   updatingPatientStatus: false,
   updateStatusError: null,
-  // patients: TestPatient,
-  patients: [],
+  patients: TestPatient,
   //Todo: TestPatient change to []
   fetchingPatients: false,
-  fetchPatientsError: null
+  fetchPatientsError: null,
 };
 
 const doctorSlice = createSlice({
-  name: "doctor",
+  name: 'doctor',
   initialState,
   reducers: {
     updatePatientStatusRequest: (state) => {
@@ -101,8 +100,8 @@ const doctorSlice = createSlice({
     fetchPatientsFail: (state, action: PayloadAction<string>) => {
       state.fetchingPatients = false;
       state.fetchPatientsError = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -111,43 +110,34 @@ export const {
   updatePatientStatusFail,
   fetchPatientsFail,
   fetchPatientsRequest,
-  fetchPatientsSuccess
+  fetchPatientsSuccess,
 } = doctorSlice.actions;
 
 
-export const updatePatientStatus = (email: string, status: string, reason: string, token: string | undefined, role: string | undefined) => async (
+
+export const updatePatientStatus = (email: string, status: string, reason: string) => async (
   dispatch: AppDispatch
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
-    const response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
-        email,
-        status,
-        reason
-      },
-      {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
+    const response = await axios.post('/api/v1/doctor/updatePatientStatus', {
+      email,
+      status,
+      reason,
+    });
     dispatch(updatePatientStatusSuccess());
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
-    console.log("Update Patient Status error: " + errorMessage);
+    console.log("Update Patient Status error: " + errorMessage );
     dispatch(updatePatientStatusFail(errorMessage));
   }
 };
 
-export const fetchPatients = (email: string, token: string, role: string | undefined) => async (dispatch: AppDispatch) => {
+export const fetchPatients = (email: string) => async (dispatch: AppDispatch) => {
   dispatch(fetchPatientsRequest());
   try {
-    const response = await axios.get(`/api/v1/${role}/getAllAssessPatients?email=${email}`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
+    const response = await axios.get(`/api/v1/doctor/getAllAssessPatients?email=${email}`);
     dispatch(fetchPatientsSuccess(response.data));
-    console.log("Patients: " + response);
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     console.log("doctor fetching patient error: " + errorMessage);

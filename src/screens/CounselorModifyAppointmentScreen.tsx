@@ -55,6 +55,7 @@ export default function CounselorModifyAppointmentScreen() {
 				</Step>
 			</Stepper> */}
 			<Grid id="main-grid" container direction="column" spacing={3}>
+
 				<Grid item container id="date-timeslot-picker-grid">
 					<Grid item container direction="column" id="date-picker" spacing={2} md={12} lg={8}>
 						<Grid item>

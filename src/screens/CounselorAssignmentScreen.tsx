@@ -52,8 +52,6 @@ export default function CounselorAssignmentScreen() {
 		phone: "8199933118",
 		registrationNo: null,
 		status: "VERIFIED",
-		assessmentTaken: false,
-		assessmentOptionsSelected:[],
   		password: "tests@555",
   		assessmentTaken: true,
   		assessmentOptionsSelected: [""],
@@ -87,14 +85,6 @@ export default function CounselorAssignmentScreen() {
 	};
 
 	const handleSubmit = (event: React.MouseEvent) => {
-		event.preventDefault();
-	}
-
-	const handleAssignSelf = (event: React.MouseEvent) => {
-		event.preventDefault();
-	}
-
-	const handleAssignDoctor = (event: React.MouseEvent) => {
 		event.preventDefault();
 	}
 
@@ -168,22 +158,10 @@ export default function CounselorAssignmentScreen() {
 					{/* </Grid> */}
 					<Grid item container direction="column" id="expert-picker" spacing={2}>
 						<Grid item>
-							<Typography variant="h4">{"Counselor's comment"}</Typography>
+							<Typography variant="h4">Expert Picker</Typography>
 						</Grid>
 
-						<Grid item>
-							<TextField
-								id="outlined-multiline-flexible"
-								label="Counselor's comment"
-								placeholder="Please enter your comment..."
-								required
-								multiline
-								maxRows={6}
-								value={comment}
-								onChange={handleCommentChange}
-							/>
-						</Grid>
-						{/* <Grid item container spacing={3}>
+						<Grid item container spacing={3}>
 							{experts.map((expert) => (
 								<Grid item xs={12} sm={6} xl={4} key={expert.name}>
 									<Card
@@ -210,23 +188,10 @@ export default function CounselorAssignmentScreen() {
 									</Card>
 								</Grid>
 							))}
-						</Grid> */}
+						</Grid>
 					</Grid>
 				</Grid>
 				<Grid id="profile-grid" item container md={4} direction="column" spacing={3}>
-					<Grid id="patient-details" item container spacing={2} direction="column">
-						<Grid item>
-							<Typography variant="h4">Assessment Summary</Typography>
-						</Grid>
-						<Grid item>
-							<Paper sx={{ p: 3, paddingTop: 1, display: "flex", flexDirection: "column" }}>
-								<Stack spacing={1}>
-									<Typography>Score: 19</Typography>
-									<Typography>Description: {"description about the score"}</Typography>
-								</Stack>
-							</Paper>
-						</Grid>
-					</Grid>
 					<Grid id="patient-details" item container spacing={2} direction="column">
 						<Grid item>
 							<Typography variant="h4">Patient Details</Typography>
@@ -248,18 +213,35 @@ export default function CounselorAssignmentScreen() {
 								</Stack>
 							</Paper>
 						</Grid>
-						<Grid item container display="flex" justifyContent="space-between">
-							<Button variant="outlined" color="secondary"
+					</Grid>
+					<Grid id="expert-details" item container spacing={2} direction="column">
+						<Grid item>
+							<Typography variant="h4">Expert Details</Typography>
+						</Grid>
+						<Grid item>
+							<Paper sx={{ p: 3, paddingTop: 1, display: "flex", flexDirection: "column" }}>
+								<Box display="flex" alignItems="center" justifyContent="flex-start" >
+									<Avatar>{patient.name.charAt(0)}</Avatar>
+									<Typography variant="h5" margin={3}>{patient.name}</Typography>
+								</Box>
+								<Stack spacing={1}>
+									<Typography>ID: {patient.id}</Typography>
+									<Typography>Email: {patient.email}</Typography>
+									<Typography>Role: {patient.role}</Typography>
+									<Typography>Address: {patient.address}</Typography>
+									<Typography>Date of Birth: {patient.dob}</Typography>
+									<Typography>Phone: {patient.phone}</Typography>
+									<Typography>Status: {patient.status}</Typography>
+								</Stack>
+							</Paper>
+						</Grid>
+						<Grid item container>
+							<Button variant="outlined" color="secondary" sx={{ flexGrow: 1, marginRight: "1rem" }}
 								onClick={() => { navigate("../") }}
 							>Back</Button>
 							<Button
-								variant="contained" onClick={handleAssignSelf}>
-								Assign Self
-							</Button>
-							<Button
-								variant="contained" onClick={handleAssignDoctor}>
-								Assign Doctor
-							</Button>
+								// disabled
+								variant="contained" sx={{ flexGrow: 1, marginLeft: "1rem" }} onClick={handleClickOpen}>Assign</Button>
 						</Grid>
 					</Grid>
 				</Grid>

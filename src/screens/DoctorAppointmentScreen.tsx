@@ -19,28 +19,19 @@ import {
   Card
 } from "@mui/material";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { doctorTheme } from "../Themes";
 import { defaultPatient, Patient } from "../types/PatientDataType";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { fetchPatients, selectDoctor } from "../features/doctor/doctorSlice";
+import { useAppSelector } from "../app/hooks";
+import { selectDoctor } from "../features/doctor/doctorSlice";
 import { ansList, questions } from "./PatientAssessmentScreen";
-import { selectUserLogIn } from "../features/auth/userLogInSlice";
-import { roleToPosition } from "../constants/PositionRoleMap";
 
 export default function DoctorAppointmentScreen(props: any) {
   const { patients } = useAppSelector(selectDoctor);
-  const { userInfo } = useAppSelector(selectUserLogIn);
-  const dispatch = useAppDispatch();
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const role = userInfo?.userData.role;
-  const position = roleToPosition.get(role ? role : "");
-  useEffect(() => {
-    if (userInfo)
-      dispatch(fetchPatients(userInfo.userData.email, userInfo.token, position));
-  }, []);
+
 
   const handleAssessmentButtonClick = (patient: Patient) => {
     setSelectedPatient(patient);

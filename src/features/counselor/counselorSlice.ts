@@ -82,7 +82,7 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
 export const fetchPatients = (email: string) => async (dispatch: AppDispatch) => {
   dispatch(fetchPatientsRequest());
   try {
-    const response = await axios.get(`/api/v1/counsellor/getAllAssessPatients?email=${email}`);
+    const response = await axios.get(`/api/v1/doctor/getAllAssessPatients?email=${email}`);
     dispatch(fetchPatientsSuccess(response.data));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;

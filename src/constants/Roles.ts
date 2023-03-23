@@ -1,5 +1,4 @@
-const
-	roles = {
+const roles = {
 	patient: "ROLE_PATIENT",
 	doctor: "ROLE_DOCTOR",
 	counselor: "ROLE_COUNSELLOR",

@@ -51,47 +51,16 @@ export const assessmentSlice = createSlice({
       state.error = true;
       state.errorMessage = action.payload;
     },
-    setAllAnswer: (state, action: PayloadAction<string[]>) => {
-      action.payload.forEach((value, i) => {
-        state.answers[i+1] = value;
-      });
-    },
-    submitCancel: (state, action) => {
-      state.loading = false;
-      state.error = false;
-      state.success = true;
-      state.errorMessage = action.payload;
-    },
-
 
   },
 });
 
-export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}, token: string) => async (dispatch: AppDispatch) => {
+export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}) => async (dispatch: AppDispatch) => {
   dispatch(submitRequest());
   console.log(questionAnswers)
   try {
-    const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers);
     dispatch(submitSuccess(data.response));
-    console.log(data.response);
-    // localStorage.setItem('userData', JSON.stringify(data));
-  } catch (err: any) {
-    const errorMessage = err.response ? err.response.data.response : err.message
-    console.log(errorMessage);
-    dispatch(submitFail(errorMessage));
-  }
-
-  try {
-    const { data } = await axios.post(`/api/v1/patient/removeAssessDetails?email=________________`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    dispatch(submitCancel(data.response));
     console.log(data.response);
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
@@ -101,5 +70,5 @@ export const submitAssessment = (questionAnswers: { email: string, assessmentOpt
   }
 };
 
-export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail,setAllAnswer, submitCancel } = assessmentSlice.actions;
+export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail } = assessmentSlice.actions;
 export default assessmentSlice.reducer;

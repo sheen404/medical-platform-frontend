@@ -13,12 +13,7 @@ import * as React from "react";
 import { patientTheme } from "../Themes";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../app/store";
-import {
-  setCurrentQuestionIndex,
-  setAnswer,
-  submitAssessment,
-  setAllAnswer
-} from "../features/patient/assessmentSlice";
+import { setCurrentQuestionIndex, setAnswer, submitAssessment } from "../features/patient/assessmentSlice";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
@@ -27,7 +22,6 @@ import { redirect } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { userRegisterReset } from "../features/auth/userRegisterSlice";
-import { listAllPersonnel } from "../features/manager/personnelsSlice";
 
 export const questions = [
   {
@@ -109,7 +103,7 @@ export default function PatientAssessmentScreen(props: any) {
     if (userInfo) {
       const email = userInfo.userData.email; // Replace this with the user's actual email
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
-      dispatch(submitAssessment({ email, assessmentOptionsSelected }, userInfo.token));
+      dispatch(submitAssessment({ email, assessmentOptionsSelected }));
       if (success) {
         setSubmitSuccess(true);
       } else {
@@ -119,11 +113,7 @@ export default function PatientAssessmentScreen(props: any) {
 
   };
   const onCancel = () => {
-     setCancel(true);
-     setTimeout(() => {
-      navigate("/patient/dashboard");
-    }, 4000);
-    dispatch(setCurrentQuestionIndex(0));
+     setSubmitFail(true);
   }
 
   const onReview = () => {
@@ -131,25 +121,21 @@ export default function PatientAssessmentScreen(props: any) {
     setShowSummary(true);
   };
 
+
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
   }, [currentQuestionIndex, answers]);
 
   useEffect(() => {
-    if (submitSuccess) {
+    if (submitSuccess || submitFail) {
       setTimeout(() => {
         navigate("/patient/dashboard");
       }, 4000);
     }
   }, [submitSuccess, submitFail])
   const renderContent = () => {
-    if(userInfo){
-      if(userInfo.userData.assessmentTaken) {
-        dispatch(setAllAnswer(userInfo.userData.assessmentOptionsSelected));
-        dispatch(setCurrentQuestionIndex(8));
-      }
-    }
-    if (showSummary || userInfo?.userData.assessmentTaken || success) {
+
+    if (showSummary) {
       return (
         <Box>
           <Typography variant="h4" my={5}>Summary</Typography>
@@ -182,7 +168,6 @@ export default function PatientAssessmentScreen(props: any) {
                 setShowSummary(false);
               }}
               sx={{ textTransform: "none" }}
-              disabled={success || userInfo?.userData.assessmentTaken}
             >
               Edit Answers
             </Button>
