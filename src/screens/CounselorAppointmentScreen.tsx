@@ -219,7 +219,7 @@ export default function CounselorAppointmentScreen(props: any) {
           </Stack> */}
           <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {counselorAppointmentList.appointments.length === 0 && (
-              <Typography variant="h5" color={"primary.contrastText"}>
+              <Typography variant="h5" color={"primary.contrastText"} marginLeft={"1rem"}>
                 You have no appointment.
               </Typography>
             )}
@@ -376,7 +376,10 @@ export default function CounselorAppointmentScreen(props: any) {
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
           <Typography variant="subtitle1">
-            Meeting Link: {appointmentDetail?.meetingLink}
+            Meeting Link:
+            <a href={appointmentDetail?.meetingLink} target="_blank" rel="noreferrer">
+              {appointmentDetail?.meetingLink}
+            </a>
           </Typography>
         </DialogContent>
       </Dialog>

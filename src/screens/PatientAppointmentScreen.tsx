@@ -101,6 +101,7 @@ export default function PatientAppointmentScreen(props: any) {
             <Typography variant="h5">You have no appointment.</Typography>
           )}
           {patientAppointmentList.appointments.map((appointment) => (
+            (appointment.name != "" && appointment.name != null) &&
             <Grid
               key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
             >
@@ -149,58 +150,21 @@ export default function PatientAppointmentScreen(props: any) {
                     >
                       <MoreVert />
                     </Button>
-                    {appointment.status === "ASSIGNED" &&
-                      !isAppointmentExpired(appointment) && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{
-                            color: "primary.contrastText",
-                            marginRight: 2,
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleReject(appointment)}
-                        >
-                          Reject
-                        </Button>
-                      )}
 
-                    {appointment.status === "ASSIGNED" &&
-                      isAppointmentExpired(appointment) && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{
-                            color: "primary.contrastText",
-                            marginRight: 2,
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleReject(appointment)}
-                          disabled
-                        >
-                          Reject
-                        </Button>
-                      )}
-
-                    {appointment.status !== "ASSIGNED" &&
-                      isAppointmentExpired(appointment) && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{
-                            color: "primary.contrastText",
-                            marginRight: 2,
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleReject(appointment)}
-                          disabled
-                        >
-                          Reject
-                        </Button>
-                      )}
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{
+                        color: "primary.contrastText",
+                        marginRight: 2,
+                        borderColor: "secondary.dark",
+                        ":hover": { backgroundColor: "secondary.dark" },
+                      }}
+                      onClick={() => handleReject(appointment)}
+                      disabled={appointment.status !== "ASSIGNED" || isAppointmentExpired(appointment)}
+                    >
+                      Reject
+                    </Button>
                     {appointment.status === "ASSIGNED" &&
                       !isAppointmentExpired(appointment) && (
                         <Button
@@ -218,11 +182,11 @@ export default function PatientAppointmentScreen(props: any) {
 
                     {(appointment.status !== "ASSIGNED" ||
                       isAppointmentExpired(appointment)) && (
-                      <Button variant="outlined" disabled>
-                        {appointment.status}
-                        {isAppointmentExpired(appointment) && " EXPIRED"}
-                      </Button>
-                    )}
+                        <Button variant="outlined" disabled>
+                          {appointment.status}
+                          {isAppointmentExpired(appointment) && " EXPIRED"}
+                        </Button>
+                      )}
                   </CardActions>
                 </Card>
               </Box>
@@ -288,7 +252,10 @@ export default function PatientAppointmentScreen(props: any) {
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
           <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
-            Meeting Link: {appointmentDetail?.meetingLink}
+            Meeting Link:
+            <a href={appointmentDetail?.meetingLink} target="_blank" rel="noreferrer">
+              {appointmentDetail?.meetingLink}
+            </a>
           </Typography>
           {/* <Typography variant="subtitle1">
               Notes:
